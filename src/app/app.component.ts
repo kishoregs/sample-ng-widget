@@ -1,12 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 
+interface CustomerData {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+}
+
 @Component({
   selector: 'app-root',
   template: `
     <div class="widget-container">
-      <h2>Sample Widget</h2>
+      <h2>Customer Widget</h2>
       <p>Status: {{ status }}</p>
-      <p *ngIf="customerUID">Customer UID: {{ customerUID }}</p>
+      <div *ngIf="customerData">
+        <h3>Customer Details</h3>
+        <p>ID: {{ customerData.id }}</p>
+        <p>Name: {{ customerData.name }}</p>
+        <p>Email: {{ customerData.email }}</p>
+        <p>Status: {{ customerData.status }}</p>
+      </div>
     </div>
   `,
   styles: [`
@@ -20,7 +33,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   status = 'Initializing...';
-  customerUID: string | null = null;
+  customerData: CustomerData | null = null;
 
   ngOnInit() {
     console.log('Widget initialized');
@@ -31,9 +44,9 @@ export class AppComponent implements OnInit {
   handleMessage(event: MessageEvent) {
     console.log('Widget received message:', event.data, 'from origin:', event.origin);
     if (event.data.type === 'CUSTOMER_DATA') {
-      this.customerUID = event.data.uid;
+      this.customerData = event.data.data;
       this.status = 'Customer data received';
-      console.log('Updated customer UID:', this.customerUID);
+      console.log('Updated customer data:', this.customerData);
     }
   }
 
