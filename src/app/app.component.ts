@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-root',
   template: `
     <div class="widget-container">
-      <h2>Test Widget</h2>
+      <h2>Sample Widget</h2>
       <p>Status: {{ status }}</p>
       <p *ngIf="customerUID">Customer UID: {{ customerUID }}</p>
     </div>
@@ -23,18 +23,22 @@ export class AppComponent implements OnInit {
   customerUID: string | null = null;
 
   ngOnInit() {
+    console.log('Widget initialized');
     window.addEventListener('message', this.handleMessage.bind(this));
     this.sendReadyMessage();
   }
 
   handleMessage(event: MessageEvent) {
+    console.log('Widget received message:', event.data, 'from origin:', event.origin);
     if (event.data.type === 'CUSTOMER_DATA') {
       this.customerUID = event.data.uid;
       this.status = 'Customer data received';
+      console.log('Updated customer UID:', this.customerUID);
     }
   }
 
   sendReadyMessage() {
+    console.log('Sending WIDGET_READY message');
     window.parent.postMessage({ type: 'WIDGET_READY' }, '*');
     this.status = 'Ready';
   }
